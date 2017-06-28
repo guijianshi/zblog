@@ -39,7 +39,7 @@ class Tag extends AdminBase
     {
         $id = request()->get('id',0);
         if($id == 0)
-            $data =  db('tag')->field('tid,tname')->select();
+            $data =  db('tag')->field(['tid' => 'key', 'tid', 'tname'])->select();
         else
             $data = db('tag')->find($id);
         return $this->suc(['data'=>$data]);

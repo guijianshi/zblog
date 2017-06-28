@@ -15,21 +15,28 @@ class Category extends AdminBase
 {
     public function add(Request $request)
     {
-        if ($request->isGet()) {
-            $pid = $request->get('pid', 1);
-            return view('', ['pid' => $pid]);
-        } else {
-            $data = $request->post();
-            $data = $data['form'];
-            if (!$data['cname'] || !$data['keywords'] || !$data['description'] || !$data['sort'] || !$data['pid'])
-                return $this->err('完善分类内容');
-            $exist_category = db('category')->where('cname', $data['cname'])->find();
-            if ($exist_category)
-                return $this->err('分类已存在');
+
+        $cname = $request->post('cname');
+        $keywords = $request->post('keywords');
+        $description = $request->post('description');
+        $pid = $request->post('pid');
+        if (!$cname || !$keywords || !$description)
+            return $this->err('完善分类内容');
+        $exist_category = db('category')->where('cname', $cname)->find();
+        if ($exist_category)
+            return $this->err('分类已存在');
+        $data = [
+            'cname' => $cname,
+            'keywords' => $keywords,
+            'description' => $description,
+            'pid' => $pid,
+        ];
+        try {
             $suc_count = db('category')->insert($data);
             return $this->suc(['suc_count' => $suc_count]);
+        } catch (\Exception $e) {
+            return $this->err('添加失败');
         }
-
     }
 
     public function get($id = 0)
@@ -46,18 +53,31 @@ class Category extends AdminBase
         $category = model('category')->find($id);
         if (!$category)
             return $this->error('分类不存在');
-        if ($request->isGet()) {
-            return view('', ['category' => $category]);
-        } else {
-            $category = request()->put()['form'];
-            if (!$category['cname'] || !$category['keywords'] || !$category['description'])
-                return $this->err('完善分类内容');
-            $exist_category = db('category')->find($id);
-            if (!$exist_category)
-                return $this->err('分类已存在');
-            $suc_count = model('category')->save($category, ['cid' => $id]);
-            return $suc_count ? $this->suc($id . '分类编辑成功') : $this->err($id . '编辑失败');
-        }
+
+        $cname = $request->post('cname');
+        $keywords = $request->post('keywords');
+        $description = $request->post('description');
+        $pid = $request->post('pid');
+        if (!$category['cname'] || !$category['keywords'] || !$category['description'])
+            return $this->err('完善分类内容');
+        $exist_category_id = db('category')->find($id);
+        if (!$exist_category_id)
+            return $this->err('分类不存在');
+        $exist_category_cname = db('category')
+            ->where('cname', $cname)
+            ->where('cid','neq', $id)
+            ->select();
+        if ($exist_category_cname)
+            return $this->err('分类名重复');
+        $data = [
+            'cname' => $cname,
+            'keywords' => $keywords,
+            'description' => $description,
+            'pid' => $pid,
+        ];
+        $suc_count = model('category')->save($data, ['cid' => $id]);
+        return $suc_count ? $this->suc($id . '分类编辑成功') : $this->err($id . '编辑失败');
+
 
     }
 
