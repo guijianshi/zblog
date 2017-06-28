@@ -22,6 +22,7 @@ Route::any('v1/category/get','admin/category/getrecursion');
 Route::get('v1/category/:id','admin/category/get');
 Route::post('v1/category','admin/category/add');
 Route::post('v1/category/:id','admin/category/edit');
+Route::post('v1/category/delete/:id','admin/category/delete');
 
 
 
