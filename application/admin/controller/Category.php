@@ -45,7 +45,8 @@ class Category extends AdminBase
             $data = db('category')->select();
         else
             $data = db('category')->find($id);
-        return $this->suc(['data' => $data]);
+        $total = db('category')->count();
+        return $this->suc(['data' => $data, 'total' => $total]);
     }
 
     public function edit(Request $request, $id)

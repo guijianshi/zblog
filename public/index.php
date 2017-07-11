@@ -12,9 +12,9 @@
 // [ 应用入口文件 ]
 
 // 定义应用目录
-header( "Access-Control-Allow-Origin:*");
+header("Access-Control-Allow-Origin:*");
 
-header('Access-Control-Allow-Methods:POST');
+header('Access-Control-Allow-Methods:DELETE, GET, POST, PUT');
 // 响应头设置
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 if (strtolower($_SERVER['REQUEST_METHOD']) == 'options') {

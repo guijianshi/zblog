@@ -18,53 +18,54 @@ class Tag extends AdminBase
     public function add(Request $request)
     {
         $tags = $request->post('tname');
-        if(!$tags)
+        if (!$tags)
             return $this->err('标签内容为空');
-        $tags = str_replace('，',',',$tags);
-        $tags = explode(',',$tags);
+        $tags = str_replace('，', ',', $tags);
+        $tags = explode(',', $tags);
         $tags = Util::arr_trim_unset_null($tags);
 
         $exist_tag = db('tag')->column('tname');
-        $tags = array_diff($tags,$exist_tag);
-        foreach($tags as $tag){
-            $data[] = ['tname'=>$tag];
+        $tags = array_diff($tags, $exist_tag);
+        foreach ($tags as $tag) {
+            $data[] = ['tname' => $tag];
         }
-        if(empty($data))
+        if (empty($data))
             return $this->err('标签已存在');
-        $suc_count =  db('tag')->insertAll($data);
-        return $this->suc(['suc_count'=>$suc_count]);
+        $suc_count = db('tag')->insertAll($data);
+        return $this->suc(['suc_count' => $suc_count]);
     }
 
     public function get()
     {
-        $id = request()->get('id',0);
-        if($id == 0)
-            $data =  db('tag')->field(['tid' => 'key', 'tid', 'tname'])->select();
+        $id = request()->get('id', 0);
+        if ($id == 0)
+            $data = db('tag')->field(['tid' => 'key', 'tid', 'tname'])->select();
         else
             $data = db('tag')->find($id);
-        return $this->suc(['data'=>$data]);
+        $total = db('tag')->count();
+        return $this->suc(['data' => $data, 'total' => $total]);
     }
 
 
     public function edit($id, Request $request)
     {
-        $tname = $request->get('tname');
-        if(!$id || !$tname)
+        $tname = $request->put('tname');
+        if (!$id || !$tname)
             return $this->err('标签标号和标签名不可为空');
         $tag_by_tid = db('tag')->find($id);
-        $tag_by_tname = db('tag')->where('tname',$tname)->find();
-        if(!$tag_by_tid)
+        $tag_by_tname = db('tag')->where('tname', $tname)->find();
+        if (!$tag_by_tid)
             return $this->err('标签不存在');
-        if($tag_by_tname && $tag_by_tid['tid'] != $tag_by_tname['tid'])
+        if ($tag_by_tname && $tag_by_tid['tid'] != $tag_by_tname['tid'])
             return $this->err('标签已存在');
-        $suc_count =  db('tag')->where('tid',$id)->setField('tname',$tname);
-        return $suc_count? $this->suc('编辑成功'): $this->err('未作任何修改');
+        $suc_count = db('tag')->where('tid', $id)->setField('tname', $tname);
+        return $suc_count ? $this->suc('编辑成功') : $this->err('未作任何修改');
     }
 
     public function delete($id)
     {
         $suc_count = db('tag')->delete($id);
-        return $suc_count ? $this->suc('删除成功,删除'.$suc_count.'条') : $this->err('删除失败');
+        return $suc_count ? $this->suc('删除成功,删除' . $suc_count . '条') : $this->err('删除失败');
 
     }
 }
