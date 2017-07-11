@@ -55,10 +55,10 @@ class Category extends AdminBase
         if (!$category)
             return $this->error('分类不存在');
 
-        $cname = $request->post('cname');
-        $keywords = $request->post('keywords');
-        $description = $request->post('description');
-        $pid = $request->post('pid');
+        $cname = $request->put('cname');
+        $keywords = $request->put('keywords');
+        $description = $request->put('description');
+        $pid = $request->put('pid');
         if (!$category['cname'] || !$category['keywords'] || !$category['description'])
             return $this->err('完善分类内容');
         $exist_category_id = db('category')->find($id);
