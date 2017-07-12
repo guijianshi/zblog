@@ -24,26 +24,4 @@ class AdminBase extends Base
 //        $this->assign($data);
     }
 
-    public function suc($msg)
-    {
-        if(is_array($msg)){
-            $result =  array_merge(['ret'=>1],$msg);
-        }elseif(is_string($msg)){
-            $result =  ['ret'=>1,'msg'=>$msg];
-        }else{
-            $result = ['ret'=>1,'msg'=>'操作成功'];
-        }
-        return json($result);
-    }
-    public function err($msg)
-    {
-        if(is_array($msg)){
-            $result =  array_merge(['ret'=>0],$msg);
-        }elseif(is_string($msg)){
-            $result =  ['ret'=>0,'msg'=>$msg];
-        }else{
-            $result = ['ret'=>0,'msg'=>'操作成功'];
-        }
-        return json($result);
-    }
 }
