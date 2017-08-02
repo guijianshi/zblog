@@ -20,6 +20,7 @@ class Category extends AdminBase
         $keywords = $request->post('keywords');
         $description = $request->post('description');
         $pid = $request->post('pid');
+        $icon = $request->put('icon');
         if (!$cname || !$keywords || !$description)
             return $this->err('完善分类内容');
         $exist_category = db('category')->where('cname', $cname)->find();
@@ -30,6 +31,7 @@ class Category extends AdminBase
             'keywords' => $keywords,
             'description' => $description,
             'pid' => $pid,
+            'icon' => $icon,
         ];
         try {
             $suc_count = db('category')->insert($data);
@@ -53,13 +55,14 @@ class Category extends AdminBase
     {
         $category = model('category')->find($id);
         if (!$category)
-            return $this->error('分类不存在');
+            return $this->err('分类不存在');
 
         $cname = $request->put('cname');
         $keywords = $request->put('keywords');
         $description = $request->put('description');
         $pid = $request->put('pid');
-        if (!$category['cname'] || !$category['keywords'] || !$category['description'])
+        $icon = $request->put('icon');
+        if (!$cname || !$keywords || !$description)
             return $this->err('完善分类内容');
         $exist_category_id = db('category')->find($id);
         if (!$exist_category_id)
@@ -75,6 +78,7 @@ class Category extends AdminBase
             'keywords' => $keywords,
             'description' => $description,
             'pid' => $pid,
+            'icon' => $icon,
         ];
         $suc_count = model('category')->save($data, ['cid' => $id]);
         return $suc_count ? $this->suc($id . '分类编辑成功') : $this->err($id . '编辑失败');
@@ -92,7 +96,7 @@ class Category extends AdminBase
 
     public function getRecursion()
     {
-        $categorys = db('category')->order('pid','ASC')->column(['cid value', 'cname label', 'pid']);
+        $categorys = db('category')->order('pid','ASC')->column(['cid value', 'cname label','icon', 'pid']);
         foreach ($categorys as $item) {
             $categorys[$item['pid']]['children'][] = &$categorys[$item['value']];
         }
