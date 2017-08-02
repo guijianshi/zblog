@@ -91,7 +91,13 @@ class Category extends AdminBase
         if (is_int($id))
             return $this->err('id必须是数字');
         $suc_count = db('category')->delete($id);
-        return $suc_count ? $this->suc('删除成功,删除' . $suc_count . '条') : $this->err('删除失败');
+        if ($suc_count) {
+            $articleModel = new \app\common\model\Article();
+            $articles = $articleModel->save(['cid' => 1],['cid' => $id]);
+        }
+
+        return $suc_count ? $this->suc(['mgs' => '删除成功,删除' . $suc_count . '条', 'article_effect' => $articles])
+            : $this->err('删除失败');
     }
 
     public function getRecursion()
@@ -111,7 +117,7 @@ class Category extends AdminBase
         foreach ($categorys as $category) {
             if ($category['pid'] == $pid) {
                 $subs[] = ['value' => $category['cid'], 'label' => str_repeat('| ', $level - 1) . ($level > 1 ? '-' : '') . $category['cname'], 'level' => $level];
-                $subs = array_merge($subs, $this->getSub($categorys, $category['cid'], $level + 1));
+                $subs = array_merge($subs, $this->getSubs($categorys, $category['cid'], $level + 1));
             }
         }
         return $subs;

@@ -9,7 +9,6 @@
 namespace app\admin\controller;
 
 use app\common\controller\AdminBase;
-use think\Cache;
 use think\Db;
 use think\Exception;
 use think\Request;
@@ -83,22 +82,23 @@ class Article extends AdminBase
         return $ret ? $this->suc('删除成功') : $this->err('删除失败');
     }
 
-    public function show()
+    public function show(Request $request)
     {
-        $article = model('article');
-        $data = $article->paginate(10);
-        foreach ($data as $key => $article) {
-            $data[$key]->cname = $article->category->cname;
-        }
-        $this->assign('data', $data);
-        return view();
+        $id = $request->get('id');
+        if (is_null($id))
+            return $this->err('id不得为空');
+        $article = model('article')->find($id);
+        if (!$article)
+            return $this->err('文章不存在');
+        $article->tags;
+        return $this->suc(['data' => $article]);
     }
 
     public function edit(Request $request, $id)
     {
         $article = model('article')->find($id);
         if (!$article)
-            return $this->error('文章不存在');
+            return $this->err('文章不存在');
         if ($request->isGet()) {
             $article_tags = $article->tags;
             $tags = [];

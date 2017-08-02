@@ -13,6 +13,7 @@ use think\Route;
 
 Route::get('/login', 'admin/security/login');
 Route::get('/v1/article/get', 'admin/article/get');
+Route::get('/v1/article/show', 'admin/article/show');
 Route::delete('/v1/article/:id', 'admin/article/delete');
 Route::post('/v1/article', 'admin/article/add');
 
