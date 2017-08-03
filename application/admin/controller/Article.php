@@ -140,7 +140,6 @@ class Article extends AdminBase
 
     public function getByTag($tname)
     {
-//        $data = \app\common\model\Article::with('tags')->where()->select();
         $data = model('article')->alias('p')
             ->join('category c','c.cid = p.cid')
             ->join('article_tag at','p.aid = at.aid')

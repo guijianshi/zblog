@@ -2,59 +2,43 @@
 namespace app\index\controller;
 
 use app\common\controller\IndexBase;
-use app\common\model\Article;
-use think\Controller;
 use think\Request;
 
 class Index extends IndexBase
 {
     public function index(Request $request)
     {
-        $page = $request->get('page', 1);
-        $size = $request->get('size', 15);
-        $offset = ($page - 1) * $size;
+        list($size, $offset) = $this->getRequest($request);
         $article = model('article');
-        $data = $article->limit($offset, $size)->select();
+        $data = $article->with('category,tags')->limit($offset, $size)->select();
         $total = $article->count();
-        foreach ($data as $key => $article) {
-            $data[$key]->cname = $article->category->cname;
-            $data[$key]->key = $key;
-            $tags = json_decode(json_encode($article->tags),true);
-            $tags = array_column($tags,'tname');
-            $data[$key]->tag = $tags;
-            unset($article->tags);
-        }
+        $data = $this->dataProcessor($data);
         return $this->suc(['data' => $data, 'total' => $total]);
     }
 
-    public function category(Request $request)
+    public function getByCatogory(Request $request, $cname)
     {
-        $page = $request->get('page', 1);
-        $size = $request->get('size', 15);
-        $offset = ($page - 1) * $size;
-        $p_cname = $request->get('p_cname');
-        $pid = model('category')->where('cname', $p_cname)->limit(1)->select();
-        if (empty($pid)) {
-            return $this->err('标签不存在');
-        }
-        $pid = $pid[0]->cid;
-        $categorys = db('category')->order('pid','ASC')->column(['cid value', 'cname label', 'pid']);
-        $c = $this->getSubs($categorys,$pid);
-        $cname = $request->get('cname');
-        $article = model('article');
+        list($size, $offset) = $this->getRequest($request);
+        $model = model('article')->alias('p')
+            ->join('category c','c.cid = p.cid')
+            ->join('article_tag at','p.aid = at.aid')
+            ->where('c.cname',$cname)->with('category,tags');
+        list($total, $data) = $this->getPage($model, $offset, $size);
+        $data = $this->dataProcessor($data);
+        return $this->suc(['data' => $data, 'total' => $total]);
+    }
 
-        $data = $article->alias('p')->join('category c','p.cid = c.cid','inner')
-            ->whereIn('p.cid',$this->getSubCid($categorys, $pid, [$pid]))->limit($offset, $size)->select();
-        $total = $article->count();
-        foreach ($data as $key => $article) {
-            $data[$key]->cname = $article->category->cname;
-            $data[$key]->key = $key;
-            $tags = json_decode(json_encode($article->tags),true);
-            $tags = array_column($tags,'tname');
-            $data[$key]->tag = $tags;
-            unset($article->tags);
-        }
-        return $this->suc(['data' => $data, 'total' => $total, 'cname' => $c]);
+    public function getByTag(Request $request, $tname)
+    {
+        list($size, $offset) = $this->getRequest($request);
+        $model = model('article')->alias('p')
+            ->join('category c','c.cid = p.cid')
+            ->join('article_tag at','p.aid = at.aid')
+            ->join('tag t', 't.tid = at.tid')
+            ->where('t.tname',$tname)->with('category,tags');
+        list($total, $data) = $this->getPage($model, $offset, $size);
+        $data = $this->dataProcessor($data);
+        return $this->suc(['data' => $data, 'total' => $total]);
     }
 
     public function getSubs($categorys, $pid = 0, $level = 1)

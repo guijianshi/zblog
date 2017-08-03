@@ -9,6 +9,9 @@
 namespace app\common\controller;
 
 use think\Controller;
+use think\db\Query;
+use think\Request;
+
 class Base extends Controller
 {
     public function _initialize()
@@ -37,5 +40,47 @@ class Base extends Controller
             $result = ['ret'=>0,'msg'=>'操作成功'];
         }
         return json($result);
+    }
+
+    /**
+     * @param $data
+     */
+    public function dataProcessor(array $data): array
+    {
+        foreach ($data as $key => $article) {
+            $data[$key]->cname = $article->category->cname;
+            $data[$key]->key = $key;
+            $tags = json_decode(json_encode($article->tags), true);
+            $tags = array_column($tags, 'tname');
+            $data[$key]->tag = $tags;
+        }
+        return $data;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getRequest(Request $request): array
+    {
+        $page = $request->get('page', 1);
+        $size = $request->get('size', 15);
+        $offset = ($page - 1) * $size;
+        return array($size, $offset);
+    }
+
+    /**
+     * 获取页面总数和页面对应信息
+     * @param Query $model
+     * @param $offset
+     * @param $size
+     * @return array
+     */
+    public function getPage(Query $model, $offset, $size): array
+    {
+        $data = $model->limit($offset, $size)
+            ->select();
+        $total = $model->count();
+        return [$total, $data];
     }
 }

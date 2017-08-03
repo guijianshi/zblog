@@ -38,5 +38,6 @@ Route::post('/v1/logout', 'admin/security/logout');
 Route::get('/v1/logined_info', 'admin/security/logined_info');
 
 Route::get('/index/index/index', 'index/index/index');
-Route::get('/index/index/category', 'index/index/category');
+Route::get('/index/index/category/:cname', 'index/index/getByCatogory');
+Route::get('/index/index/tag/:tname', 'index/index/getByTag');
 
