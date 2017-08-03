@@ -12,6 +12,7 @@ use app\common\controller\AdminBase;
 use think\Db;
 use think\Exception;
 use think\Request;
+use app\common\model\Article as ArticleModel;
 
 class Article extends AdminBase
 {
@@ -21,19 +22,9 @@ class Article extends AdminBase
         $size = $request->get('size', 15);
         $offset = ($page - 1) * $size;
         $article = model('article');
-//        $data = $article->alias('a')->join('category c','c.cid = a.cid','left')
-//            ->column('a.aid,a.title,a.author,a.is_show,is_original,a.click,a.create_at,c.cname');
-        $data = $article->limit($offset, $size)->select();
+        $data = $article->with('category,tags')->limit($offset, $size)->select();
         $total = $article->count();
-        foreach ($data as $key => $article) {
-            $data[$key]->cname = $article->category->cname;
-            $data[$key]->key = $key;
-            $tags = json_decode(json_encode($article->tags),true);
-            $tags = array_column($tags,'tname');
-            $data[$key]->tag = $tags;
-            unset($article->tags);
-
-        }
+        $data = $this->dataProcessor($data);
         return $this->suc(['data' => $data, 'total' => $total]);
     }
 
@@ -59,7 +50,7 @@ class Article extends AdminBase
         if (!$validate->check($data)) {
             return $this->err($validate->getError());
         }
-        $article = model('article');
+        $article = new ArticleModel();
         Db::startTrans();
         try {
             $ret = $article->allowField(true)->save($data);
@@ -99,37 +90,83 @@ class Article extends AdminBase
         $article = model('article')->find($id);
         if (!$article)
             return $this->err('文章不存在');
-        if ($request->isGet()) {
-            $article_tags = $article->tags;
-            $tags = [];
-            foreach ($article_tags as $tag) {
-                $a = $tag->pivot->tid;
-                $tags[] = $a;
-            }
-            $article->article_tags = $tags;
-            return view('', ['article' => $article]);
-        } else {
-            $post = $request->post();
-            $data = $post['form'];
-            $article_tag = [];
-            $article_tags = $post['article_tags'];
-            foreach ($article_tags as $tid) {
-                $article_tag[] = $tid;
-
-            }
-            Db::startTrans();
-            try {
-                $ret = $article->allowField(true)->save($data);
-                if (!empty($article_tag))
-                    $article->tags()->attach($article_tag);
-                Db::commit();
-                return $ret ? $this->suc('编辑成功') : $this->err('编辑失败');
-
-            } catch (Exception $e) {
-                Db::rollback();
-                throw $e;
-            }
+        $data['title'] = $request->post('title');
+        $category = $request->post('category');
+        $category = json_decode($category,true);
+        $data['cid'] = array_pop($category);
+        $data['author'] = $request->post('author');
+        $data['content'] = $request->post('content');
+        $data['keywords'] = $request->post('keywords');
+        $data['description'] = $request->post('description');
+        $data['is_show'] = $request->post('is_show');
+        $data['is_top'] = $request->post('is_top');
+        $data['is_original'] = $request->post('is_original');
+        $article_tag = $request->post('article_tag');
+        $article_tag = json_decode($article_tag,true);
+        $validate = validate('Article');
+        if (!$validate->check($data)) {
+            return $this->err($validate->getError());
+        }
+        Db::startTrans();
+        try {
+            $ret = $article->allowField(true)->save($data);
+            if (empty($article_tag))
+                $article->tags()->saveAll($article_tag);
+            Db::commit();
+            return $ret ? $this->suc(['suc_count' => $ret, 'msg' => "第{$article->aid}篇文章添加成功"]) : $this->err('添加失败');
+        } catch (Exception $e) {
+            Db::rollback();
+            throw $e;
         }
 
+    }
+
+    public function getByCatogory($cname)
+    {
+        $data = model('article')->alias('p')
+            ->join('category c','c.cid = p.cid')
+            ->join('article_tag at','p.aid = at.aid')
+            ->where('c.cname',$cname)->with('category,tags')
+            ->select();
+        $total = model('article')->alias('p')
+            ->join('category c','c.cid = p.cid')
+            ->join('article_tag at','p.aid = at.aid')
+            ->where('c.cname',$cname)->with('category,tags')
+            ->count();
+        $data = $this->dataProcessor($data);
+        return $this->suc(['data' => $data, 'total' => $total]);
+    }
+
+
+    public function getByTag($tname)
+    {
+//        $data = \app\common\model\Article::with('tags')->where()->select();
+        $data = model('article')->alias('p')
+            ->join('category c','c.cid = p.cid')
+            ->join('article_tag at','p.aid = at.aid')
+            ->join('tag t', 't.tid = at.tid')
+            ->where('t.tname',$tname)->with('category,tags')->select();
+        $total = model('article')->alias('p')
+            ->join('category c','c.cid = p.cid')
+            ->join('article_tag at','p.aid = at.aid')
+            ->join('tag t', 't.tid = at.tid')->where('t.tname',$tname)
+            ->with('tags')->count();
+        $data = $this->dataProcessor($data);
+        return $this->suc(['data' => $data, 'total' => $total]);
+    }
+
+    /**
+     * @param $data
+     */
+    public function dataProcessor(array $data): array
+    {
+        foreach ($data as $key => $article) {
+            $data[$key]->cname = $article->category->cname;
+            $data[$key]->key = $key;
+            $tags = json_decode(json_encode($article->tags), true);
+            $tags = array_column($tags, 'tname');
+            $data[$key]->tag = $tags;
+        }
+        return $data;
     }
 }

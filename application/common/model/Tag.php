@@ -8,7 +8,6 @@
 
 namespace app\common\model;
 
-use app\common\model\Base;
 class Tag extends Base
 {
     public function initialize()
@@ -17,4 +16,10 @@ class Tag extends Base
     }
     public $pk = 'tid';
     protected $table = 'lin_tag';
+
+    public function artciles()
+    {
+        return $this->belongsToMany('\\app\\common\\model\\article',
+            'lin_article_tag', 'tid','tid');
+    }
 }

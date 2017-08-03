@@ -8,7 +8,7 @@
 
 namespace app\common\model;
 
-use app\common\model\Base;
+
 class Category extends Base
 {
     public function initialize()
@@ -17,4 +17,9 @@ class Category extends Base
     }
     public $pk = 'cid';
     protected $table = 'lin_category';
+
+    public function articles()
+    {
+        return $this->hasMany('Article')->field('article');
+    }
 }

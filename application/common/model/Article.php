@@ -8,7 +8,7 @@
 
 namespace app\common\model;
 
-use app\common\model\Base;
+
 use traits\model\SoftDelete;
 class Article extends Base
 {
@@ -38,7 +38,7 @@ class Article extends Base
      */
     public function category()
     {
-        return $this->belongsTo('\\app\\common\\model\\Category','cid')->field('cname');
+        return $this->belongsTo('category','cid','cid');
     }
 
     /**
