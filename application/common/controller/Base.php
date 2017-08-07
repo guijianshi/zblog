@@ -45,7 +45,7 @@ class Base extends Controller
     /**
      * @param $data
      */
-    public function dataProcessor(array $data): array
+    public function dataProcessor(array $data)
     {
         foreach ($data as $key => $article) {
             $data[$key]->cname = $article->category->cname;
@@ -61,7 +61,7 @@ class Base extends Controller
      * @param Request $request
      * @return array
      */
-    public function getRequest(Request $request): array
+    public function getRequest(Request $request)
     {
         $page = $request->get('page', 1);
         $size = $request->get('size', 15);
@@ -76,7 +76,7 @@ class Base extends Controller
      * @param $size
      * @return array
      */
-    public function getPage(Query $model, $offset, $size): array
+    public function getPage(Query $model, $offset, $size)
     {
         $data = $model->limit($offset, $size)
             ->select();

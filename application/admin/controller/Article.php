@@ -9,6 +9,7 @@
 namespace app\admin\controller;
 
 use app\common\controller\AdminBase;
+use app\common\util\Ancestor;
 use think\Db;
 use think\Exception;
 use think\Request;
@@ -30,10 +31,7 @@ class Article extends AdminBase
 
     public function add(Request $request)
     {
-
         $data['title'] = $request->post('title');
-//        $d = $request->post('category');
-//        return $this->suc(gettype($d));
         $category = $request->post('category');
         $category = json_decode($category,true);
         $data['cid'] = array_pop($category);
@@ -78,10 +76,13 @@ class Article extends AdminBase
         $id = $request->get('id');
         if (is_null($id))
             return $this->err('id不得为空');
-        $article = model('article')->find($id);
+        $article = model('article')->alias('p')
+            ->join('category c','c.cid = p.cid')
+            ->join('article_tag at','p.aid = at.aid')
+            ->with('category,tags')
+            ->find($id);
         if (!$article)
             return $this->err('文章不存在');
-        $article->tags;
         return $this->suc(['data' => $article]);
     }
 
@@ -154,18 +155,12 @@ class Article extends AdminBase
         return $this->suc(['data' => $data, 'total' => $total]);
     }
 
-    /**
-     * @param $data
-     */
-    public function dataProcessor(array $data): array
+    public function getAncestorId($data)
     {
-        foreach ($data as $key => $article) {
-            $data[$key]->cname = $article->category->cname;
-            $data[$key]->key = $key;
-            $tags = json_decode(json_encode($article->tags), true);
-            $tags = array_column($tags, 'tname');
-            $data[$key]->tag = $tags;
-        }
+        $assoc = ArticleModel::all();
+
+        $helper = new Ancestor($assoc, $data);
+        $data = $helper->getAncestor();
         return $data;
     }
 }
