@@ -49,6 +49,7 @@ class Base extends Controller
     {
         foreach ($data as $key => $article) {
             $data[$key]->cname = $article->category->cname;
+            $data[$key]->comment_count = count($article->comments);
             $data[$key]->key = $key;
             $tags = json_decode(json_encode($article->tags), true);
             $tags = array_column($tags, 'tname');

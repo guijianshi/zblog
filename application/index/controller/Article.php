@@ -16,8 +16,11 @@ class Article extends IndexBase
     public function show($aid)
     {
         $article = model('article');
-        $data = $article->with('category,tags')->where('aid',$aid)->select();
-        $data = $this->dataProcessor($data);
+        $article = $article->with('category,tags')->find($aid);
+        if (!$article)
+            return $this->err('文章不存在');
+        $article->setInc('click');
+        $data = $this->dataProcessor([$article]);
         return $this->suc(['data' => $data[0],]);
     }
 }

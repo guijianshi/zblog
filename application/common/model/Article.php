@@ -49,4 +49,9 @@ class Article extends Base
     {
         return $this->belongsToMany('\\app\\common\\model\\Tag','lin_article_tag','tid','aid');
     }
+
+    public function comments()
+    {
+        return $this->hasMany('Comment', 'aid');
+    }
 }
