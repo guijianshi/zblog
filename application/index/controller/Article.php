@@ -18,6 +18,6 @@ class Article extends IndexBase
         $article = model('article');
         $data = $article->with('category,tags')->where('aid',$aid)->select();
         $data = $this->dataProcessor($data);
-        return $this->suc(['data' => $data,]);
+        return $this->suc(['data' => $data[0],]);
     }
 }
