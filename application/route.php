@@ -19,7 +19,7 @@ Route::delete('/v1/article/:id', 'admin/article/delete');
 Route::post('/v1/article', 'admin/article/add');
 Route::get('/v1/article/tag/:tname', 'admin/article/getByTag');
 Route::get('/v1/article/category/:cname', 'admin/article/getByCatogory');
-
+Route::get('v1/icon', 'admin/icon/get');
 
 Route::any('v1/category/get', 'admin/category/getrecursion');
 Route::get('v1/category/:id', 'admin/category/get');

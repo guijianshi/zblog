@@ -33,7 +33,7 @@ class Article extends IndexBase
             ->where('title', 'like', "%$key%");
         list($total, $data) = $this->getPage($model, $offset, $size);
         if (!$total)
-            return $this->suc('没有符合内容的文章');
+            return $this->suc(['total' => $total, 'msg' => '没有符合内容的文章']);
         $data = $this->dataProcessor($data);
         return $this->suc(['total' => $total, 'data' => $data,]);
     }
