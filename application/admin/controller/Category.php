@@ -20,7 +20,7 @@ class Category extends AdminBase
         $keywords = $request->post('keywords');
         $description = $request->post('description');
         $pid = $request->post('pid');
-        $icon = $request->put('icon');
+        $icon = $request->post('icon');
         if (!$cname || !$keywords || !$description)
             return $this->err('完善分类内容');
         $exist_category = db('category')->where('cname', $cname)->find();
