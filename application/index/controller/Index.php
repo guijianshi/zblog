@@ -10,7 +10,7 @@ class Index extends IndexBase
     {
         list($size, $offset) = $this->getRequest($request);
         $article = model('article');
-        $data = $article->with('category, tags, comments')->limit($offset, $size)->select();
+        $data = $article->limit($offset, $size)->select();
         $total = $article->count();
         $data = $this->dataProcessor($data);
         return $this->suc(['data' => $data, 'total' => $total]);
@@ -22,7 +22,7 @@ class Index extends IndexBase
         $model = model('article')->alias('p')
             ->join('category c','c.cid = p.cid')
             ->join('article_tag at','p.aid = at.aid')
-            ->where('c.cname',$cname)->with('category, tags, comments');
+            ->where('c.cname',$cname);
         list($total, $data) = $this->getPage($model, $offset, $size);
         $data = $this->dataProcessor($data);
         return $this->suc(['data' => $data, 'total' => $total]);
