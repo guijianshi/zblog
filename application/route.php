@@ -46,4 +46,5 @@ Route::put('/index/comment/:id', 'index/comment/update');
 Route::delete('/index/comment/:id', 'index/comment/delete');
 Route::get('/index/comment/:aid', 'index/comment/show');
 Route::get('/index/article/:aid', 'index/article/show');
+Route::get('/index/article/search', 'index/article/searchByTitle');
 

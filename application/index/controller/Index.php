@@ -1,4 +1,5 @@
 <?php
+
 namespace app\index\controller;
 
 use app\common\controller\IndexBase;
@@ -20,9 +21,9 @@ class Index extends IndexBase
     {
         list($size, $offset) = $this->getRequest($request);
         $model = model('article')->alias('p')
-            ->join('category c','c.cid = p.cid')
-            ->join('article_tag at','p.aid = at.aid')
-            ->where('c.cname',$cname);
+            ->join('category c', 'c.cid = p.cid')
+            ->join('article_tag at', 'p.aid = at.aid')
+            ->where('c.cname', $cname);
         list($total, $data) = $this->getPage($model, $offset, $size);
         $data = $this->dataProcessor($data);
         return $this->suc(['data' => $data, 'total' => $total]);
@@ -32,10 +33,10 @@ class Index extends IndexBase
     {
         list($size, $offset) = $this->getRequest($request);
         $model = model('article')->alias('p')
-            ->join('category c','c.cid = p.cid')
-            ->join('article_tag at','p.aid = at.aid')
+            ->join('category c', 'c.cid = p.cid')
+            ->join('article_tag at', 'p.aid = at.aid')
             ->join('tag t', 't.tid = at.tid')
-            ->where('t.tname',$tname)->with('category, tags, comments');
+            ->where('t.tname', $tname);
         list($total, $data) = $this->getPage($model, $offset, $size);
         $data = $this->dataProcessor($data);
         return $this->suc(['data' => $data, 'total' => $total]);
