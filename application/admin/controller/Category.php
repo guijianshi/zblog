@@ -21,6 +21,7 @@ class Category extends AdminBase
         $description = $request->post('description');
         $pid = $request->post('pid');
         $icon = $request->post('icon');
+        $pic_url = $request->post('pic_url','http://i4.bvimg.com/608112/aa08b9ac86a5da5f.jpg');
         if (!$cname || !$keywords || !$description)
             return $this->err('完善分类内容');
         $exist_category = db('category')->where('cname', $cname)->find();
@@ -32,6 +33,7 @@ class Category extends AdminBase
             'description' => $description,
             'pid' => $pid,
             'icon' => $icon,
+            'pic_url' => $pic_url,
         ];
         try {
             $suc_count = db('category')->insert($data);
@@ -62,6 +64,7 @@ class Category extends AdminBase
         $description = $request->put('description');
         $pid = $request->put('pid');
         $icon = $request->put('icon');
+        $pic_url = $request->put('pic_url','http://i4.bvimg.com/608112/aa08b9ac86a5da5f.jpg');
         if (!$cname || !$keywords || !$description)
             return $this->err('完善分类内容');
         $exist_category_id = db('category')->find($id);
@@ -79,6 +82,7 @@ class Category extends AdminBase
             'description' => $description,
             'pid' => $pid,
             'icon' => $icon,
+            'pic_url' => $pic_url,
         ];
         $suc_count = model('category')->save($data, ['cid' => $id]);
         return $suc_count ? $this->suc($id . '分类编辑成功') : $this->err($id . '编辑失败');
@@ -102,7 +106,7 @@ class Category extends AdminBase
 
     public function getRecursion()
     {
-        $categorys = db('category')->order('pid','ASC')->column(['cid value', 'cname label','icon', 'pid']);
+        $categorys = db('category')->order('pid','ASC')->column(['cid value', 'cname label','icon', 'pid', 'pic_url']);
         foreach ($categorys as $item) {
             $categorys[$item['pid']]['children'][] = &$categorys[$item['value']];
         }
@@ -141,5 +145,11 @@ class Category extends AdminBase
         $sort_list = $request->put()['sort_list'];
         $suc_count = model('category')->saveAll($sort_list);
         return $suc_count ? $this->suc('排序成功') : $this->err('排序失败');
+    }
+
+
+    private function getDataByRequest(Request $request)
+    {
+
     }
 }
