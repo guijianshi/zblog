@@ -66,7 +66,6 @@ class Comment extends IndexBase
         $article = model('article')->find($aid);
         if (!$article)
             return $this->err('文章不存在');
-        $article->setInc('click');
         $comments = $comment_model->where('aid', $aid)->select();
         return $this->suc(['data' => $comments]);
     }
