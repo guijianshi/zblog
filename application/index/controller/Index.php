@@ -26,7 +26,10 @@ class Index extends IndexBase
             ->where('c.cname', $cname);
         list($total, $data) = $this->getPage($model, $offset, $size);
         $data = $this->dataProcessor($data);
-        return $this->suc(['data' => $data, 'total' => $total]);
+        $cid = model('category')->where('cname', $cname)->column('cid');
+        $categorys = model('category')->column('cid value, cname label, pid');
+        $childrens = $this->getSubs($categorys, $cid[0]);
+        return $this->suc(['data' => $data, 'total' => $total, 'child' =>$childrens]);
     }
 
     public function getByTag(Request $request, $tname)
@@ -46,10 +49,14 @@ class Index extends IndexBase
     {
         $subs = array();
         $k = 0;
-        foreach ($categorys as $category) {
+        foreach ($categorys as $key => $category) {
+            $category = is_object($category) ? $category->toArray() : $category;
             if ($category['pid'] == $pid) {
+                unset($categorys[$key]);
                 $subs[$k] = ['value' => $category['value'], 'label' => $category['label'], 'level' => $level];
                 $subs[$k]['child'] = $this->getSubs($categorys, $category['value'], $level + 1);
+                if (empty($subs[$k]['child']))
+                    unset($subs[$k]['child']);
                 $k++;
             }
         }
