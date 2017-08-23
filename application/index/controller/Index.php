@@ -22,8 +22,8 @@ class Index extends IndexBase
         list($size, $offset) = $this->getRequest($request);
         $model = model('article')->alias('p')
             ->join('category c', 'c.cid = p.cid')
-            ->join('article_tag at', 'p.aid = at.aid')
             ->where('c.cname', $cname);
+
         list($total, $data) = $this->getPage($model, $offset, $size);
         $data = $this->dataProcessor($data);
         $cid = model('category')->where('cname', $cname)->column('cid');
