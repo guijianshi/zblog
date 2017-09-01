@@ -16,6 +16,7 @@ Route::get('/login', 'admin/security/login');
 Route::get('/v1/article/get', 'admin/article/get');
 Route::get('/v1/article/show', 'admin/article/show');
 Route::delete('/v1/article/:id', 'admin/article/delete');
+Route::put('/v1/article/:id', 'admin/article/edit');
 Route::post('/v1/article', 'admin/article/add');
 Route::get('/v1/article/tag/:tname', 'admin/article/getByTag');
 Route::get('/v1/article/category/:cname', 'admin/article/getByCatogory');
@@ -37,7 +38,7 @@ Route::any('/v1/login', 'admin/security/login');
 Route::post('/v1/logout', 'admin/security/logout');
 Route::get('/v1/logined_info', 'admin/security/logined_info');
 
-Route::get('/index/index/index', 'index/index/index');
+Route::get('/index/index/index', 'index/index/indexA');
 Route::get('/index/index/category/:cname', 'index/index/getByCatogory');
 Route::get('/index/index/tag/:tname', 'index/index/getByTag');
 
@@ -47,4 +48,8 @@ Route::delete('/index/comment/:id', 'index/comment/delete');
 Route::get('/index/comment/:aid', 'index/comment/show');
 Route::get('/index/article/:aid', 'index/article/show');
 Route::get('/index/article/search', 'index/article/searchByTitle');
+Route::get('/qq/login', 'index/oauth/qqLogin');
+Route::get('/oauth/qq', 'index/oauth/qqCallback');
+Route::get('/oauth/user_info', 'index/oauth/getQQInfo');
+Route::get('/', 'index/index/index');
 

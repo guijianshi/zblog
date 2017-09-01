@@ -7,7 +7,7 @@ use think\Request;
 
 class Index extends IndexBase
 {
-    public function index(Request $request)
+    public function indexA(Request $request)
     {
         list($size, $offset) = $this->getRequest($request);
         $article = model('article');
@@ -72,5 +72,10 @@ class Index extends IndexBase
             }
         }
         return $cids;
+    }
+
+    public function index()
+    {
+        return view();
     }
 }
