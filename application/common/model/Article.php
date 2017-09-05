@@ -19,14 +19,14 @@ class Article extends Base
     public $pk = 'aid';
     protected $table = 'lin_article';
     protected $type = [
-        'create_at'=>'timestamp:Y/m/d H:i:s',
-        'update_at'=>'timestamp:Y/m/d H:i:s',
+        'create_time'=>'timestamp:Y/m/d H:i:s',
+        'update_time'=>'timestamp:Y/m/d H:i:s',
     ];
     use SoftDelete;
-    protected $deleteTime = 'delete_at';
+    protected $deleteTime = 'delete_time';
     /*时间戳字段名*/
-    protected $createTime = 'create_at';
-    protected $updateTime = 'update_at';
+    protected $createTime = 'create_time';
+    protected $updateTime = 'update_time';
     /*时间戳自动写入*/
     protected $autoWriteTimestamp = true;
 

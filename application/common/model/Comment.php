@@ -25,6 +25,16 @@ class Comment extends Model
     use SoftDelete;
     protected $deleteTime = 'delete_time';
 
+    protected $type = [
+        'create_time'=>'timestamp:Y/m/d H:i:s',
+        'update_time'=>'timestamp:Y/m/d H:i:s',
+    ];
+    /*时间戳字段名*/
+    protected $createTime = 'create_time';
+    protected $updateTime = 'update_time';
+    /*时间戳自动写入*/
+    protected $autoWriteTimestamp = true;
+
     public function getStatusAttr($value)
     {
         $status = [-1 => '删除', 0 => '禁用', 1 => '正常', 2 => '待审核'];

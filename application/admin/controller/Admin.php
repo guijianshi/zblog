@@ -15,7 +15,7 @@ class Admin extends Controller
 {
     public function is_admin($username, $unique)
     {
-        $admin = db('admin')->where('username', $username)->where('unique', $unique)->select();
+        $admin = db('admin')->where('username', $username)->where('unique', $unique)->find();
         if ($admin) {
             return true;
         } else {

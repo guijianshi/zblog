@@ -21,14 +21,12 @@ class Security extends Controller
      */
     public function login(Request $request)
     {
-        if (!$request->isPost())
-            return json(['ret' => 0]);
 //        if (!captcha_check(trim($request->post('verify'))))
 //            return json(['ret' => 0, 'msg' => '验证码错误']);
         $username = trim($request->post('username'));
         $password = trim($request->post('password'));
         if (!$username || !$password)
-            return json(['ret' => 0, '请输入用户名和密码']);
+            return json(['ret' => 0, 'msg' => '请输入用户名和密码']);
         $admin = db('admin')->where('username', $username)->find();
         if (!$admin)
             return json(['ret' => 0, '用户不存在']);
