@@ -28,7 +28,7 @@ class Base extends Controller
         }else{
             $result = ['ret'=>1,'msg'=>'操作成功'];
         }
-        return json($result);
+        return json($this->nullFilter($result));
     }
     public function err($msg)
     {
@@ -39,7 +39,7 @@ class Base extends Controller
         }else{
             $result = ['ret'=>0,'msg'=>'操作成功'];
         }
-        return json($result);
+        return json($this->nullFilter($result));
     }
 
     /**
@@ -83,5 +83,40 @@ class Base extends Controller
             ->select();
         $total = $model->count();
         return [$total, $data];
+    }
+
+
+    /**
+     * null过滤器,将属性null转化为''
+     * @param $var
+     * @return array|string
+     */
+    private function nullFilter($var)
+    {
+        if (is_null($var)) {
+          return '';
+        } elseif (is_string($var)) {
+            if (empty($var)){
+                return '';
+            } else {
+                return $var;
+            }
+        } elseif(is_array($var)) {
+            if (empty($var))
+                return '';
+            else {
+                foreach ($var as $key => $value) {
+                    $var[$key] = $this->nullFilter($value);
+                }
+                return $var;
+            }
+        } elseif(is_object($var)) {
+            if (empty($var))
+                return '';
+            else {
+                return $this->nullFilter(json_decode(json_encode($var), true));
+            }
+        }
+        return $var;
     }
 }
