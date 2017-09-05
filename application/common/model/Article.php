@@ -30,7 +30,7 @@ class Article extends Base
     /*时间戳自动写入*/
     protected $autoWriteTimestamp = true;
 
-    protected $readonly = ['cid','author'];
+    protected $readonly = ['aid','author'];
 
     /**
      * 分类关联

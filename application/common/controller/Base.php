@@ -45,7 +45,7 @@ class Base extends Controller
     /**
      * @param $data
      */
-    public function dataProcessor(array $data)
+    public function dataProcessor($data)
     {
         foreach ($data as $key => $article) {
             $data[$key]->cname = $article->category->cname;
