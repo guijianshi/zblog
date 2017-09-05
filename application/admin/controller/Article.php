@@ -208,7 +208,7 @@ class Article extends AdminBase
         $article_tag = json_decode($article_tag, true);
         if (!empty($article_tag)) {
             if ($this->method == 'post') {
-                $article->tags()->saveAll($article_tag);
+                $article->tags()->saveAll(array_column($article_tag, 'tid'));
             } else {
                 db('article_tag')->where('aid', $article->aid)->delete();
                 $article->tags()->attach(array_column($article_tag, 'tid'));
