@@ -11,7 +11,7 @@ namespace app\common\model;
 
 class User extends Base
 {
-    public $pk = 'id';
+    public $pk = 'uid';
     protected $table = 'lin_oauth_user';
 
     protected $type = [
