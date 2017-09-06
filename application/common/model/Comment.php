@@ -41,6 +41,16 @@ class Comment extends Model
         return $status[$value];
     }
 
+    public function getPidAttr($value)
+    {
+        $parent = $this->with('user')->find($value);
+        if ($parent) {
+            return $parent['user']->username;
+        } else {
+            return $value;
+        }
+    }
+
     public function article()
     {
         return $this->belongsTo('article', 'aid', 'aid');
@@ -49,5 +59,10 @@ class Comment extends Model
     public function user()
     {
         return $this->belongsTo('user', 'uid', 'uid');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo('comment', 'cmid', 'pid');
     }
 }
