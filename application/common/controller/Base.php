@@ -103,7 +103,7 @@ class Base extends Controller
             }
         } elseif(is_array($var)) {
             if (empty($var))
-                return '';
+                return [];
             else {
                 foreach ($var as $key => $value) {
                     $var[$key] = $this->nullFilter($value);

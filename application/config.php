@@ -220,7 +220,7 @@ return [
         // cookie 保存时间
         'expire'    => 604800,
         // cookie 保存路径
-        'path'      => '/',
+        'path'      => '',
         // cookie 有效域名
         'domain'    => '',
         //  cookie 启用安全传输

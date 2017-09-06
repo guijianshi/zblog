@@ -98,7 +98,7 @@ class Comment extends IndexBase
                 throw new ParameterException();
 
             $userDao = new UserDao();
-            $user = $userDao->find(['uid' => $openid, 'type' => $type]);
+            $user = $userDao->find(['openid' => $openid, 'type' => $type]);
             if (!$user) {
                 $data = [];
                 $data['openid'] = $openid;
