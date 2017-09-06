@@ -43,6 +43,11 @@ class Comment extends Model
 
     public function article()
     {
-        return $this->belongsTo('article');
+        return $this->belongsTo('article', 'aid', 'aid');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('user', 'uid', 'uid');
     }
 }
