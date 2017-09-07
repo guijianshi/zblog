@@ -21,7 +21,7 @@ class singleArticle extends React.Component{
   }
   fetch(id){
     this.props.dispatch({type:'IndexPage/showArticleLoading'});
-    reqwest({url:'http://127.0.0.1:8888/index/article/'+id}).then((data)=>{
+    reqwest({url:url+'index/article/'+id}).then((data)=>{
       if(data.ret==1){
         console.log(data.data)
         const article=data.data;
