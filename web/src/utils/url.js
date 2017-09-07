@@ -1,1 +1,1 @@
-export default 'http://www.guijianshi.cn/'
+export default '/'
