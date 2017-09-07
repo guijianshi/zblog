@@ -13,6 +13,7 @@ use think\Route;
 
 Route::post('/login', 'admin/security/login');
 
+Route::get('admin/index', 'admin/index/index');
 Route::post('/v1/admin/img_upload', 'admin/upload/uploadImg');
 Route::get('/v1/article/get', 'admin/article/get');
 Route::get('/v1/article/show', 'admin/article/show');
