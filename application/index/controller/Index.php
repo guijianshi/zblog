@@ -27,7 +27,7 @@ class Index extends IndexBase
         list($total, $data) = $this->getPage($model, $offset, $size);
         $data = $this->dataProcessor($data);
         $cid = model('category')->where('cname', $cname)->column('cid');
-        $categorys = model('category')->column('cid value, cname label, pid');
+        $categorys = model('category')->column('cid value, cname label, pid, icon');
         $childrens = $this->getSubs($categorys, $cid[0]);
         return $this->suc(['data' => $data, 'total' => $total, 'child' =>$childrens]);
     }
@@ -53,7 +53,12 @@ class Index extends IndexBase
             $category = is_object($category) ? $category->toArray() : $category;
             if ($category['pid'] == $pid) {
                 unset($categorys[$key]);
-                $subs[$k] = ['value' => $category['value'], 'label' => $category['label'], 'level' => $level];
+                $subs[$k] = [
+                    'value' => $category['value'],
+                    'label' => $category['label'],
+                    'icon' => $category['icon'],
+                    'level' => $level,
+                ];
                 $subs[$k]['child'] = $this->getSubs($categorys, $category['value'], $level + 1);
                 if (empty($subs[$k]['child']))
                     unset($subs[$k]['child']);
@@ -63,6 +68,13 @@ class Index extends IndexBase
         return $subs;
     }
 
+    /**
+     * 获取子分类
+     * @param array $categorys
+     * @param int $pid 父级分类id
+     * @param $cids
+     * @return array
+     */
     public function getSubCid($categorys, $pid, $cids)
     {
         foreach ($categorys as $category) {
