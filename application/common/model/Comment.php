@@ -60,9 +60,4 @@ class Comment extends Model
     {
         return $this->belongsTo('user', 'uid', 'uid');
     }
-
-    public function parent()
-    {
-        return $this->belongsTo('comment', 'cmid', 'pid');
-    }
 }
