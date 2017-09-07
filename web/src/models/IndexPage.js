@@ -1,14 +1,23 @@
 import reqwest from 'reqwest'
 import {message} from 'antd'
+import url from '../utils/url'
 export default {
 
   namespace: 'IndexPage',
 
   state: {
+    url:'http://www.guijianshi.cn/',
     showSider:true,
     commentList:[],
     commentLoading:false,
     articleLoading:false,
+    userInfo:{
+      isLogin:false,
+      openid:'',
+      avatar:'',
+      type:'',
+      username:''
+    }
 
   },
 
@@ -25,18 +34,26 @@ export default {
       yield put({ type: 'showCommentLoading'});
       const data=yield call(function request(){
         return reqwest({
-          url:'http://localhost:8888/index/comment/'+payload.aid,
+          url:url+'index/comment/'+payload.aid,
           method:'get',
         }).then((data)=>{return data})
       });
       if(data.ret==1){
-        yield put({ type: 'showComment',payload:{commentList:data.data,commentLoading:false} });
+        if(data.data){
+         var commentList=data.data.map((comment,index)=>{
+            comment.replyContent=''
+           return comment
+         })
+        }else {
+          var commentList=[]
+        }
+        yield put({ type: 'showComment',payload:{commentList,commentLoading:false} });
       }
     },
     *addComment({ payload }, { call, put }){
       const data=yield call(function request(){
         return reqwest({
-          url:'http://localhost:8888/index/comment/create',
+          url:url+'index/comment/create',
           method:'post',
           data:payload
         }).then((data)=>{return data})
@@ -50,6 +67,18 @@ export default {
   },
 
   reducers: {
+    setUser(state,{payload}){
+      return { ...state,...payload };
+    },
+    logout(state){
+      return {...state,userInfo:{
+        isLogin:false,
+        openId:'',
+        avatar:'',
+        type:'',
+        username:''
+      }}
+    },
     showS(state) {
       return { ...state, showSider:true };
     },

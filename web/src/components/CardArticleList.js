@@ -57,8 +57,8 @@ class CardArticleList extends React.Component{
     console.log(this.state.articleList)
     return (
       <div>
-        {(this.state.articleList.length==0&&typeof this.state.articleList=='object')?
-          <span style={{display:'block',height:500,textAlign:'center',fontSize:30,paddingTop:100,marginTop:20}}> 暂无相关文章(┬＿┬)</span>:''}
+        {(typeof this.state.articleList=='object'&&this.state.articleList.length==0)?
+          <span style={{display:'block',height:500,textAlign:'center',fontSize:30,paddingTop:100}}> 暂无相关文章(┬＿┬)</span>:''}
         {this.state.articleList.length>0?this.state.articleList.map((item,index)=>(
           <Card  className="articleCard"   bodyStyle={{}} key={index}  >
             <div className="cardCname">
@@ -71,14 +71,14 @@ class CardArticleList extends React.Component{
               <p  style={{fontSize:18,marginBottom:10,fontWeight:700}} className='apHover'  dangerouslySetInnerHTML={{__html:item.title}} ></p>
               <p className="articleContent"></p>
               <p className='apHover' style={{fontSize:14,marginTop:15}}>
-                <span><Icon type="clock-circle-o"  /> {item.create_at}</span>
+                <span><Icon type="clock-circle-o"  /> {item.create_time}</span>
                 <span style={{marginLeft:15}}><Icon type="eye"  /> 阅读量:{item.click}</span>
                 <span style={{marginLeft:15}}><Icon type="message"  /> 评论:{item.comment_count}</span>
               </p>
-              <span  className='tagGroup' style={{marginLeft:20,marginTop:15,display:item.tag.length>0?'block':'none'}}><Icon style={{fontSize:16,marginRight:5}} type="tag-o" /> {item.tag.map((tag,subIndex)=>{
+              <span  className='tagGroup' style={{marginLeft:20,marginTop:15,display:item.tag.length>0?'block':'none'}}><Icon style={{fontSize:16,marginRight:5}} type="tag-o" /> {item.tag?item.tag.map((tag,subIndex)=>{
                 const randomColor=colorList[parseInt(Math.random()*colorList.length)]
                 return <Tag className='defaultTag' onClick={()=>{this.props.toTag(tag)}}   key={subIndex} style={{borderColor:randomColor,color:randomColor }} >{tag}</Tag>
-              })}</span>
+              }):''}</span>
             </div>
 
           </Card>

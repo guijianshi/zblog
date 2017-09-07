@@ -49,11 +49,14 @@ class TabsArticle extends React.Component{
                   <CardArticleList toTag={(tag)=>{this.props.toTag(tag)}} urlParams={this.props.urlParams}   toggleSider={(method)=>{this.props.toggleSider(method)}}  articleList={this.state.articleList} />
               </TabPane>
               {
-                this.state.childrens?this.state.childrens.map((item,index)=>(
-                <TabPane tab={item.label} key={item.label}>
-                  <CardArticleList toTag={(tag)=>{this.props.toTag(tag)}} urlParams={this.props.urlParams}  toggleSider={(method)=>{this.props.toggleSider(method)}}  articleList={item.data} />
-            </TabPane>
-                  )):''
+                this.state.childrens?this.state.childrens.map((item,index)=>{
+                  console.log(item)
+                  return(
+                    <TabPane tab={<span>{item.icon?<Icon type={item.icon}/>:''}{item.label}</span>} key={item.label}>
+                      <CardArticleList toTag={(tag)=>{this.props.toTag(tag)}} urlParams={this.props.urlParams}  toggleSider={(method)=>{this.props.toggleSider(method)}}  articleList={item.data} />
+                    </TabPane>
+                  )
+                }):''
               }
             </Tabs>
       </div>

@@ -4,6 +4,7 @@ import NewestArticleList from  '../components/NewestArticleList'
 import TagList from  '../components/TagList'
 import Introduce from  '../components/Introduce'
 import { connect } from 'dva';
+import url from '../utils/url'
 import {Row, Col,Tabs,Card,Icon,Spin,Progress} from 'antd'
 import reqwest from 'reqwest'
 const TabPane = Tabs.TabPane;
@@ -25,7 +26,7 @@ class IndexPage extends React.Component{
       scrollTop:0,
       go:false,
       bacList:[],
-      activeRoute:''
+      activeRoute:'',
     }
   }
   componentWillReceiveProps(nextProps){
@@ -59,9 +60,54 @@ class IndexPage extends React.Component{
     this.setState({scrollTop:scrollTop>0?true:false})
   }
   componentDidMount(){
+    /*var dom = document.getElementById(opts['btnId']),
+      _logoutTemplate=[
+        //头像
+        '<span><img src="{figureurl}" class="{size_key}"/></span>',
+        //昵称
+        '<span>{nickname}</span>',
+        //退出
+        '<span><a href="javascript:QC.Login.signOut();">退出</a></span>'
+      ].join("");
+    dom && (dom.innerHTML = window.QC.String.format(_logoutTemplate, {
+      nickname : window.QC.String.escHTML(reqData.nickname), //做xss过滤
+      figureurl : reqData.figureurl
+    }));*/
+
+
+
+    window.QC.api("get_user_info", {})
+      .success((s)=>{
+        console.log(this)
+        if(window.QC.Login.check()){//如果已登录
+          console.log(s)
+          window.QC.Login.getMe((openid, accessToken)=>{
+            this.props.dispatch({type:'IndexPage/setUser',payload:{userInfo:{openid,username:s.data.nickname,avatar:s.data.figureurl_qq_1,type:'qq',isLogin:true}}})
+            /*alert(["当前登录用户的", "openId为："+openId, "accessToken为："+accessToken].join("\n"));*/
+          });
+        }
+        if(window.opener){
+          window.opener.location.reload(); //刷新父窗口中的网页
+          window.close()
+        }
+        console.log(s)
+      })
+      .error(function(f){
+      })
+      //指定接口完成请求后的接收函数，c为完成请求返回Response对象
+      .complete((c)=>{
+        //完成请求回调
+        console.log(c)
+        /*alert("获取用户信息完成！");*/
+      });
+
+
+
+
+
     window.addEventListener('scroll',this.handleScroll)
     document.body.scrollTop=0
-    reqwest({url:'http://localhost:8888/index/index/index'}).then((data)=>{
+    reqwest({url:url+'index/index/index'}).then((data)=>{
         const articleList=data.data
       if(data.data.length>5){
          var newestArticle= data.data.slice(0,5)
@@ -70,7 +116,7 @@ class IndexPage extends React.Component{
       }
       this.setState({articleList,newestArticle})
     })
-    reqwest({url:'http://localhost:8888/v1/category/get'}).then((data)=>{
+    reqwest({url:url+'v1/category/get'}).then((data)=>{
       const menuList=data.data.map((item)=>{
         return {label:item.label,icon:item.icon,url:item.pic_url}
       });
@@ -159,8 +205,8 @@ class IndexPage extends React.Component{
         <Progress strokeWidth={4} showInfo={false} style={{position:'relative',top:'-12px',zIndex:99999}} percent={this.state.percent} />
         {/*内容区*/}
         <Col style={{marginTop:40}} span={14} offset={5}>
-          <Col  style={{minHeight:1000}} span={this.props.IndexPage.showSider?16:23} >
-            <div style={{position:'relative'}}>
+          <Col   style={{minHeight:1000,position:'relative'}} span={this.props.IndexPage.showSider?16:23} >
+            <div >
               {this.props.IndexPage.articleLoading?<Spin size="large" style={{position:'absolute',left:'48%',top:'350px',zIndex:1111}} />:''}
               {this.props.children}
             </div>

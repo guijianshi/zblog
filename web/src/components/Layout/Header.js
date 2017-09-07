@@ -6,7 +6,6 @@ import { Link } from 'react-router'
 import {Menu, Icon, Popover,Button,Input} from 'antd'
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
-import Background from '../../assets/img/bac.jpg'
 const defaultBac='http://i4.bvimg.com/608112/aa08b9ac86a5da5f.jpg'
 class Header extends React.Component{
   constructor(props)
@@ -85,7 +84,7 @@ class Header extends React.Component{
               )
             })}
             <Menu.Item>
-              <a href=""><span><Icon type="setting" />网站设置</span></a>
+              <a href="../application/admin/view/index/index.html"><span><Icon type="setting" />网站设置</span></a>
             </Menu.Item>
           </Menu>
 
@@ -118,7 +117,7 @@ class Header extends React.Component{
               )
             })}
             <Menu.Item>
-              <a href=""><span><Icon type="setting" />网站设置</span></a>
+              <a href="../application/admin/view/index/index.html"><span><Icon type="setting" />网站设置</span></a>
             </Menu.Item>
           </Menu>
           <Button.Group style={{float:'right',lineHeight:'52px',marginRight:20}}>

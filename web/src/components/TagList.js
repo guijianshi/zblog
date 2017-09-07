@@ -2,6 +2,7 @@
  * Created by Administrator on 2017/7/12.
  */
 import React from 'react'
+import url from '../utils/url'
 import  {Icon,Card,Tag} from  'antd'
 import reqwest from  'reqwest'
 class tagList extends React.Component{
@@ -22,7 +23,7 @@ class tagList extends React.Component{
   }
   componentDidMount(){
     reqwest({
-      url:'http://localhost:8888/v1/tag/get',
+      url:url+'v1/tag/get',
     }).then((data)=>{
       if(data.ret==1){
         var tagList=data.data.map((item)=>({label:item.tname,tid:item.tid}))

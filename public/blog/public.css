@@ -68,9 +68,9 @@ bottom: 5px;
 .articleCard:hover .apHover{
   left: 50px;
 }
-.articleCard:hover .cardCname{
+/*.articleCard:hover .cardCname{
   font-weight: 700;
-  }
+  }*/
 
 /*@keyframes apHoverMove {
 
@@ -91,8 +91,6 @@ bottom: 5px;
   transition: all 1s;
 }
 .singleCard{
-
-  position: absolute;
   z-index: 999;
 }
 .InitCard{
@@ -100,10 +98,10 @@ bottom: 5px;
 }
 .doneCard{
   display: block;
-  animation: show .6s forwards ease-out;
+  animation: show .8s forwards ease-out;
   transform: scaleX(0.1);
   height: 60px;
-  left: 420px;
+  left: 0px;
   top:0px;
 
 }
@@ -111,8 +109,8 @@ bottom: 5px;
   0% {
     height: 60px;
     transform: scaleX(0.1);
-  left: 420px;
-  top: 150px;
+  left: 0px;
+  top: -50px;
   }
   50% {
     height: 60px;
@@ -185,7 +183,17 @@ bottom: 5px;
   top: 24px;
   left: 45%;
 }
+.replyA{
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: none;
+}
+.commentLi:hover .replyA{
+  display: block;
+}
 .commentLi{
+  position: relative;
   font-size: 14px;
   padding: 10px 0;
   border-bottom: 1px solid rgb(233,233,233);
@@ -209,6 +217,16 @@ bottom: 5px;
   position: absolute!important;
   right: 5px;
   bottom: 10px;
+}
+.cancelReply{
+  position: absolute!important;
+  right: 70px;
+  bottom: 0;
+}
+.replyBtn{
+  position: absolute!important;
+  right: 5px;
+  bottom: 0;
 }
 
 
@@ -484,4 +502,8 @@ padding: 10px;
   position: absolute;
   top: -25px;
   left: -300px;
+}
+
+body .ant-message{
+  z-index: 100001;
 }

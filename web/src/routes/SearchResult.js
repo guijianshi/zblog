@@ -6,6 +6,7 @@ import { connect } from 'dva';
 import {Row, Col,Tabs,Card,Icon} from 'antd'
 import reqwest from 'reqwest'
 const TabPane = Tabs.TabPane;
+import url from '../utils/url'
 import CardArticleList from '../components/CardArticleList'
 class SearchResult extends React.Component{
   constructor(props) {
@@ -16,7 +17,7 @@ class SearchResult extends React.Component{
   }
   fetch(key){
     this.props.dispatch({type:'IndexPage/showArticleLoading'});
-    reqwest({url:'http://localhost:8888/index/article/search',data:{key}}).then((data)=>{
+    reqwest({url:url+'index/article/search',data:{key}}).then((data)=>{
 
      var articleList=data.data.map((article)=>{
        var reg = new RegExp(key);
@@ -50,7 +51,7 @@ class SearchResult extends React.Component{
     }
     return (
       <div>
-        <p style={{fontSize:16,position:'absolute',top:'-35px'}}><span style={{fontWeight:700}}>{this.props.params.key}</span> 的搜索结果为:</p>
+        <p style={{fontSize:16,position:'absolute',top:'-25px'}}><span style={{fontWeight:700}}>{this.props.params.key}</span> 的搜索结果为:</p>
         <CardArticleList {...props}  />
 
       </div>

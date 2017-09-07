@@ -16,7 +16,7 @@ function RouterConfig({ history }) {
         <Route path="singleArticle/:id" component={SingleArticle} />
         <Route path="article/:type" component={Article} />
         <Route path="search/:key" component={SearchResult} />
-
+        <Route path="*" component={Home} />
       </Route>
     </Router>
   );

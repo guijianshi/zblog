@@ -2,6 +2,7 @@
  * Created by Administrator on 2017/7/17.
  */
 import React from 'react'
+import url from '../utils/url'
 import { connect } from 'dva';
 import {Row, Col,Tabs,Card,Icon,Spin} from 'antd'
 import reqwest from 'reqwest'
@@ -18,7 +19,7 @@ class Article extends React.Component{
   }
   fetch(type,name){
     this.props.dispatch({type:'IndexPage/showArticleLoading'});
-    reqwest({url:'http://localhost:8888/index/index/'+type+'/'+name}).then((data)=>{
+    reqwest({url:url+'index/index/'+type+'/'+name}).then((data)=>{
       const articleList=data.data;
       const childrens=data.child;
       this.setState({articleList,childrens});
@@ -27,7 +28,7 @@ class Article extends React.Component{
   }
   fetchChildCategory=(activeKey)=>{
     if(activeKey!='all'){
-      reqwest({url:'http://localhost:8888/index/index/'+this.props.routeParams.type+'/'+activeKey}).then((data)=>{
+      reqwest({url:url+'index/index/'+this.props.routeParams.type+'/'+activeKey}).then((data)=>{
        /* const articleList=data.data;*/
         const childrens=this.state.childrens;
         childrens.map((item)=>{

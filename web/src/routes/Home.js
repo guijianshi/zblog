@@ -6,6 +6,7 @@ import { connect } from 'dva';
 import {Row, Col,Tabs,Card,Icon} from 'antd'
 import reqwest from 'reqwest'
 const TabPane = Tabs.TabPane;
+import url from '../utils/url'
 import CardArticleList from '../components/CardArticleList'
 class Home extends React.Component{
   constructor(props) {
@@ -16,7 +17,7 @@ class Home extends React.Component{
   }
   componentDidMount(){
     this.props.dispatch({type:'IndexPage/showArticleLoading'});
-      reqwest({url:'http://localhost:8888/index/index/index'}).then((data)=>{
+      reqwest({url:url+'index/index/index'}).then((data)=>{
         var articleList=data.data
         this.setState({articleList});
         this.props.dispatch({type:'IndexPage/hideArticleLoading'});

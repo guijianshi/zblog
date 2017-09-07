@@ -3,8 +3,9 @@
  */
 import React from 'react'
 import { connect } from 'dva';
-import {Row, Col,Tabs,Card,Icon,Spin,Input,Button,message,Tag} from 'antd'
+import {Row, Col,Tabs,Card,Icon,Spin,Input,Button,message,Tag,Alert,notification,Menu,Dropdown} from 'antd'
 import reqwest from 'reqwest'
+import url from '../utils/url'
 class singleArticle extends React.Component{
   constructor(props) {
     super(props);
@@ -53,15 +54,50 @@ class singleArticle extends React.Component{
     this.props.dispatch({type:'IndexPage/fetchComment',payload:{aid:id}})
   }
   componentDidMount(){
-
     document.body.scrollTop=0;
     this.fetch(this.props.routeParams.id);
     this.fetchComment(this.props.routeParams.id)
   }
-  addComment(aid){
-    this.setState({commentLoading:true})
-    this.props.dispatch({type:'IndexPage/addComment',payload:{content:this.state.commentValue,aid}})
-
+  openLogin=()=>{
+    var subWindow=window.open('https://graph.qq.com/oauth2.0/authorize?client_id=101419757&response_type=token&scope=all&redirect_uri=http%3A%2F%2Fwww.guijianshi.cn', 'oauth2Login_10262' ,'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes')
+  }
+  logout=()=>{
+    window.QC.Login.signOut()
+    this.props.dispatch({type:'IndexPage/logout'})
+  }
+  addComment(aid,cmid,replyContent){
+    if(this.props.IndexPage.userInfo.isLogin){
+      this.setState({commentLoading:true})
+      this.props.dispatch({type:'IndexPage/addComment',payload:{content:cmid?replyContent:this.state.commentValue,aid,...this.props.IndexPage.userInfo,pid:cmid?cmid:''}})
+    }else {
+      notification['warning']({
+        placement:'bottomLeft',
+        message: '请先登录！',
+      });
+    }
+  }
+  setReply(e,index){
+    let commentList=this.state.commentList
+    commentList[index].replyContent=e.target.value
+    this.setState({commentList})
+  }
+  replyComment(index){
+      if(!this.props.IndexPage.userInfo.isLogin){
+        notification['warning']({
+          placement:'bottomLeft',
+          message: '请先登录！',
+        });
+      }else {
+        let commentList=this.state.commentList
+        commentList[index].reply=true
+        this.setState({commentList})
+      }
+  }
+  cancelReply(index){
+    let commentList=this.state.commentList
+    commentList[index].replyContent='';
+    commentList[index].reply=false
+    this.setState({commentList})
   }
   scrollToCatalog=(scrolltop)=>{
 
@@ -83,10 +119,17 @@ class singleArticle extends React.Component{
     this.context.router.push({pathname:'article/tag',query:{name:tname}})
   }
   render(){
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <a style={{fontSize:14,color:'black'}} onClick={this.logout}>退出</a>
+        </Menu.Item>
+      </Menu>
+    );
     const colorList=['#f50','#2db7f5','#87d068','#108ee9','rgb(0, 133, 161)']
     const props={
       toggleSider:(method)=>{this.props.dispatch({type:'IndexPage/'+method})},
-      url:'http://localhost:8888/index/index/'+this.props.routeParams.type,
+      url:url+'index/index/'+this.props.routeParams.type,
       name:this.props.location.query.name
     }
     return (
@@ -117,22 +160,27 @@ class singleArticle extends React.Component{
               }
             </div>
             <p  style={{fontSize:18,marginBottom:10,marginTop:40}} className={'center '} >{this.state.article.title}</p>
-            <p style={{textAlign:'center',fontSize:14,marginTop:5,marginBottom:10}}>
+            <p style={{textAlign:'center',fontSize:14,marginTop:5,marginBottom:20}}>
               <span><Icon type="clock-circle-o"  /> {this.state.article.create_at}</span>
               <span style={{marginLeft:15}}><Icon type="eye"  /> 阅读量:{this.state.article.click}</span>
               <span style={{marginLeft:15}}><Icon type="message"  /> 评论:{this.state.article.comment_count}</span>
             </p>
-            <p className="articleContent" ref="article"  dangerouslySetInnerHTML={{__html:this.state.article.content}}></p>
+            <p style={{marginBottom:20}} className="articleContent" ref="article"  dangerouslySetInnerHTML={{__html:this.state.article.content}}></p>
 
           </div>
           <Card  className="commentCard" title={this.state.commentList.length>0?this.state.commentList.length+' 条评论':'暂无评论'}   style={{  }}>
               <ul>
                 {this.state.commentList.map((comment,index)=>{
                   return (
-                    <li key={index} className="commentLi">
+                    <li key={index}  className="commentLi">
                       <div className="commentHeader">
-                        <img />
-                        <span>章三</span>
+
+                        <img style={{float:'left',width:20,height:20,borderRadius:2,marginRight:6}} src={comment.user.avatar?comment.user.avatar:''} />
+                        <span style={{float:'left',lineHeight:'20px'}}>{comment.user.username?comment.user.username:'游客'}</span>
+                        {comment.pid?
+                          <span><span style={{fontSize:10,marginRight:8,marginLeft:8,color:'#108ee9'}}>回复</span>{comment.pid}</span>
+                          :''
+                        }
                         <span className="commentCreateTime">
                             {comment.create_time}
                           </span>
@@ -140,15 +188,40 @@ class singleArticle extends React.Component{
                       <p className="commentContent">
                         {comment.content}
                       </p>
+                      {
+                        this.props.IndexPage.userInfo.isLogin?
+                        comment.reply?
+                        <div style={{paddingRight:140,position:'relative'}}>
+                          <Input type="textarea"  placeholder="请输入评论..." value={comment.replyContent}  onChange={(e)=>{this.setReply(e,index)   }} autosize />
+                          <Button className="cancelReply"  onClick={()=>{this.cancelReply(index)}}>取消</Button>
+                          <Button className="replyBtn" type="primary" onClick={()=>{this.addComment(this.state.article.aid,comment.cmid,comment.replyContent)}}>评论</Button>
+                        </div>
+                      :
+                        <a className="replyA" onClick={()=>{this.replyComment(index)}}>回复</a>
+                      :''}
+
                     </li>
                   )
                 })}
               </ul>
               <div className="writeComment">
+
                 {this.state.commentLoading?<Spin  />:''}
                 <Input type="textarea"  placeholder="请输入评论..." value={this.state.commentValue}  onChange={(e)=>{this.setState({commentValue:e.target.value}) }} autosize />
                 <Button className="commentBtn" type="primary" onClick={()=>{this.addComment(this.state.article.aid)}}>评论</Button>
               </div>
+            {this.props.IndexPage.userInfo.isLogin?
+              <div className="clearfix">
+                <img style={{height:30,width:30,borderRadius:30,marginRight:5,float:'left'}} src={this.props.IndexPage.userInfo.avatar} alt=""/>
+                <Dropdown overlay={menu} >
+                  <a className="ant-dropdown-link" href="#" style={{color:'black',fontSize:14,float:'left',lineHeight:'30px'}}>
+                    {this.props.IndexPage.userInfo.username} <Icon type="down" />
+                  </a>
+                </Dropdown>
+              </div>:
+              <i onClick={this.openLogin} style={{fontSize:30,color:'rgb(18,183,245)',cursor:'pointer'}} className="icon-QQ iconfont"/>
+            }
+
             </Card>
 
         </Card>

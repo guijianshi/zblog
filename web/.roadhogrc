@@ -1,5 +1,12 @@
 {
   "entry": "src/index.js",
+  "proxy": {
+    "/api": {
+      "target": "http://jsonplaceholder.typicode.com/",
+      "changeOrigin": true,
+      "pathRewrite": { "^/api" : "" }
+    }
+  },
   "env": {
     "development": {
       "extraBabelPlugins": [
@@ -9,6 +16,13 @@
       ]
     },
     "production": {
+      "proxy": {
+        "http://localhost:8888": {
+          "target": "/",
+          "changeOrigin": true,
+          "pathRewrite": { "^http://localhost:8888" : "" }
+        }
+      },
       "extraBabelPlugins": [
          "transform-runtime",
     ["import", { "libraryName": "antd", "style": true }]
