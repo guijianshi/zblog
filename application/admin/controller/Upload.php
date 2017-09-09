@@ -21,4 +21,11 @@ class Upload extends AdminBase
         $img = $fileUpload->uploadImg($request);
         return $this->suc($img);
     }
+
+    public function siteImg(Request $request)
+    {
+        $fileUpload = new FileUpload('/upload/', 'site-img');
+        $img = $fileUpload->uploadImg($request);
+        return $this->suc($img);
+    }
 }

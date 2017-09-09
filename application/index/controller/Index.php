@@ -3,6 +3,8 @@
 namespace app\index\controller;
 
 use app\common\controller\IndexBase;
+use app\common\defined\exception\FileNotFoundException;
+use app\common\defined\exception\ObjectNotFoundException;
 use think\Request;
 
 class Index extends IndexBase
@@ -89,5 +91,19 @@ class Index extends IndexBase
     public function index()
     {
         return view();
+    }
+
+
+    public function setting()
+    {
+        $filename = APP_PATH . '../public/config/site_info.txt';
+        if (!file_exists($filename))
+            throw new FileNotFoundException();
+        $data = file_get_contents($filename);
+        if (empty($data))
+            throw new ObjectNotFoundException();
+        return $this->suc(['data' => $data]);
+
+
     }
 }

@@ -16,12 +16,25 @@ use think\Request;
 
 class FileUpload
 {
-    public $uploadPath = '/upload/';
+    public $uploadPath ;
+
+    /**
+     * FileUpload constructor.
+     * @param string $uploadPath
+     */
+    public function __construct($uploadPath = '/upload/', $subcatalog = null)
+    {
+        $this->uploadPath = $uploadPath;
+        if (!$subcatalog)
+            $this->uploadPath = $this->uploadPath . 'img/' . date('Y-m-d') . '/';
+        else
+            $this->uploadPath = $this->uploadPath . 'img/' . $subcatalog . '/';
+    }
+
 
     public function uploadImg(Request $request)
     {
-        $date = date('Y-m-d');
-        $this->uploadPath = $this->uploadPath . 'img/' . $date . '/';
+
         $img = $request->post('img');
         if (empty($img))
             throw new EmptyArguException();

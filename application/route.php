@@ -15,6 +15,8 @@ Route::post('/login', 'admin/security/login');
 
 Route::get('admin/index', 'admin/index/index');
 Route::post('/v1/admin/img_upload', 'admin/upload/uploadImg');
+Route::post('/v1/admin/site_img', 'admin/upload/siteImg');
+Route::post('/v1/admin/setting', 'admin/Setting/setting');
 Route::get('/v1/article/get', 'admin/article/get');
 Route::get('/v1/article/show', 'admin/article/show');
 Route::delete('/v1/article/:id', 'admin/article/delete');
@@ -54,4 +56,5 @@ Route::get('/qq/login', 'index/oauth/qqLogin');
 Route::get('/oauth/qq', 'index/oauth/qqCallback');
 Route::get('/oauth/user_info', 'index/oauth/getQQInfo');
 Route::get('/', 'index/index/index');
+Route::get('/setting', 'index/index/setting');
 
