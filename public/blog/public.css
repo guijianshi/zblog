@@ -507,3 +507,6 @@ padding: 10px;
 body .ant-message{
   z-index: 100001;
 }
+body a{
+  color: black;
+}

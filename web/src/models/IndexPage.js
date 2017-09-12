@@ -17,18 +17,39 @@ export default {
       avatar:'',
       type:'',
       username:''
+    },
+    setting:{
+      zhihu:'',
+      sina:'',
+      email:'',
+      github:'',
+      introduce:'',
+      logo:'',
+      avatar:''
     }
 
   },
 
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
+      dispatch({type:'getSetting'})
     },
   },
 
   effects: {
     *fetch({ payload }, { call, put }) {  // eslint-disable-line
       yield put({ type: 'save' });
+    },
+    *getSetting({ payload },{call,put}){
+      const data=yield call(function request(){
+        return reqwest({
+          url:url+'setting',
+          method:'get',
+        }).then((data)=>{return data})
+      });
+      if(data.ret==1){
+        yield put({type:'saveSetting',payload:data.data})
+      }
     },
     *fetchComment({ payload }, { call, put }){
       yield put({ type: 'showCommentLoading'});
@@ -67,6 +88,10 @@ export default {
   },
 
   reducers: {
+    saveSetting(state,{payload}){
+      console.log(payload)
+      return {...state,setting:payload}
+    },
     setUser(state,{payload}){
       return { ...state,...payload };
     },

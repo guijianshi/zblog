@@ -54,7 +54,7 @@ class Header extends React.Component{
       <div style={{position:'relative',top:0,width:'100%',zIndex:99999}}>
         <div className="clearfix header" style={{   height:300}}  >
           <span style={{width:200,overflow:'hidden',display:'inline-block'}}>
-                      <img style={{height:50,marginTop:0,marginLeft:16}} src={require('../../assets/img/logowhite.png')} alt=""/>
+                      <img style={{height:50,marginTop:0,marginLeft:16}} src={this.props.logo} alt=""/>
           </span>
 
           {/*背景图*/}
@@ -98,7 +98,7 @@ class Header extends React.Component{
         {/*固定定位头*/}
         <div className={'clearfix fixHeader '+this.state.fade}  >
           <span style={{width:200,overflow:'hidden',display:'inline-block'}}>
-              <img style={{height:50,marginTop:0,marginLeft:16}} src={require('../../assets/img/logo.png')} alt=""/>
+              <img style={{height:50,marginTop:0,marginLeft:16}} src={this.props.logo} alt=""/>
           </span>
           <Menu
             className='fixMenu'

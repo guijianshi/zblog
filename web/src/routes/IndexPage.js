@@ -197,10 +197,13 @@ class IndexPage extends React.Component{
 
   }
   render(){
+    const introduceInfo={
+      ...this.props.IndexPage.setting
+    }
     return (
       <div  onMouseUp={this.slideOver}  style={{paddingBottom:20,color:'black'}} className="clearfix" >
         {/*头部*/}
-        <Header scrollTop={this.state.scrollTop} activeRoute={this.state.activeRoute} searchArticle={(key)=>{this.searchArticle(key)}} menuList={this.state.menuList} bacList={this.state.bacList}    />
+        <Header logo={this.props.IndexPage.setting.logo} scrollTop={this.state.scrollTop} activeRoute={this.state.activeRoute} searchArticle={(key)=>{this.searchArticle(key)}} menuList={this.state.menuList} bacList={this.state.bacList}    />
         {/*进度条*/}
         <Progress strokeWidth={4} showInfo={false} style={{position:'relative',top:'-12px',zIndex:99999}} percent={this.state.percent} />
         {/*内容区*/}
@@ -216,7 +219,7 @@ class IndexPage extends React.Component{
             <Col className="rightContent" style={{overflow:'hidden'}} onMouseDown={this.slideInit} onMouseMove={this.sliding}  span={7} offset={1} >
               <div style={{position:'relative',left:this.state.moveX}} className={this.state.InitX?'':'transition'} >
                 <TagList toTag={this.toTag }  />
-                <Introduce/>
+                <Introduce {...introduceInfo} />
                 <NewestArticleList newestArticle={this.state.newestArticle}/>
               </div>
           </Col>:''}
