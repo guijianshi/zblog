@@ -102,6 +102,7 @@ class Index extends IndexBase
         $data = file_get_contents($filename);
         if (empty($data))
             throw new ObjectNotFoundException();
+        $data =  json_decode($data);
         return $this->suc(['data' => $data]);
 
 

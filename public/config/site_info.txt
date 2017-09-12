@@ -1,6 +1,1 @@
-{
-    "data": {
-        "msg": 1,
-        "data": "helloworld"
-    }
-}
+{"user":{"id":62,"username":"lin","email":"yangyang.lin@repugene.com","question":"","answer":"","address":"","telephone":"       ","name":"","avatar":"E:\\work\\app\/..\/web\/dist\/img\/avatar\/head.jpg"}}
