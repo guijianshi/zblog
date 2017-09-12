@@ -68,6 +68,6 @@ class FileUpload
         if ($ret === false) {
             throw new UploadException();
         }
-        return array('img' => 'public/' . $this->uploadPath . $photo);
+        return array('img' => '/public' . $this->uploadPath . $photo);
     }
 }
