@@ -25,6 +25,8 @@ Route::post('/v1/article', 'admin/article/add');
 Route::get('/v1/article/tag/:tname', 'admin/article/getByTag');
 Route::get('/v1/article/category/:cname', 'admin/article/getByCatogory');
 Route::get('v1/icon', 'admin/icon/get');
+Route::get('/v1/comment/show', 'admin/comment/showList');
+Route::delete('/v1/comment/:cmid', 'admin/comment/delete');
 
 Route::any('v1/category/get', 'admin/category/getrecursion');
 Route::get('v1/category/:id', 'admin/category/get');

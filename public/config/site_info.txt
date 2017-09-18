@@ -1,1 +1,1 @@
-{"logo":"/public/upload/img/site-img/1505186782.jpg","avatar":"/public/upload/img/site-img/1505186784.jpg","sina":"123123","email":"321321231","zhihu":"321231","github":"231231213321","introduce":"31231231232132132"}
+{"user":{"id":62,"username":"lin","email":"yangyang.lin@repugene.com","question":"","answer":"","address":"","telephone":"       ","name":"","avatar":"E:\\work\\app\/..\/web\/dist\/img\/avatar\/head.jpg"}}

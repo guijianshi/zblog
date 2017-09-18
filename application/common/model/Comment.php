@@ -9,6 +9,7 @@
 namespace app\common\model;
 
 
+use think\db\Query;
 use think\Model;
 use traits\model\SoftDelete;
 
@@ -59,5 +60,21 @@ class Comment extends Model
     public function user()
     {
         return $this->belongsTo('user', 'uid', 'uid');
+    }
+
+    /**
+     * @param $offset
+     * @param $size
+     * @return Query
+     */
+    public function getList($offset, $size)
+    {
+        $query = $this->alias('cm')
+            ->field('cm.cmid, cm.content, cm.create_time, a.title, u.username')
+            ->join('Article a', 'a.aid = cm.aid')
+            ->join('OauthUser u', 'u.uid = cm.uid')
+            ->limit($offset, $size)
+        ;
+        return $query;
     }
 }
