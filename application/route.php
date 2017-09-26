@@ -41,7 +41,7 @@ Route::post('/v1/tag', 'admin/tag/add');
 Route::put('/v1/tag/:id', 'admin/tag/edit');
 
 Route::any('/v1/login', 'admin/security/login');
-Route::post('/v1/logout', 'admin/security/logout');
+Route::any('/v1/logout', 'admin/security/logout');
 Route::get('/v1/logined_info', 'admin/security/logined_info');
 
 Route::get('/index/index/index', 'index/index/indexA');

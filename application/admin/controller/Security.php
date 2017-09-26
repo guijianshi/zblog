@@ -58,7 +58,6 @@ class Security extends Controller
 
     public function logined_info()
     {
-        return json(['ret' => 1, 'msg' => '用户已登入', 'username' => 'zb']);
         $username = cookie('username');
         $unique = cookie('unique');
         if ($username && $unique) {
