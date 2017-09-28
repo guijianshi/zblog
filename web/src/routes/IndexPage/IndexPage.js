@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import {Header} from '../components/Layout'
-import NewestArticleList from  '../components/NewestArticleList'
-import TagList from  '../components/TagList'
-import Introduce from  '../components/Introduce'
+import NewestArticleList from '../components/NewestArticleList/NewestArticleList'
+import TagList from '../components/TagList/TagList'
+import Introduce from '../components/Introduce/Introduce'
 import { connect } from 'dva';
 import url from '../utils/url'
 import {Row, Col,Tabs,Card,Icon,Spin,Progress} from 'antd'
@@ -203,7 +203,7 @@ class IndexPage extends React.Component{
     return (
       <div  onMouseUp={this.slideOver}  style={{paddingBottom:20,color:'black'}} className="clearfix" >
         {/*头部*/}
-        <Header logo={this.props.IndexPage.setting.logo} scrollTop={this.state.scrollTop} activeRoute={this.state.activeRoute} searchArticle={(key)=>{this.searchArticle(key)}} menuList={this.state.menuList} bacList={this.state.bacList}    />
+        <Header logo={this.props.IndexPage.setting.logo} logoBlack={this.props.IndexPage.setting.logoBlack} scrollTop={this.state.scrollTop} activeRoute={this.state.activeRoute} searchArticle={(key)=>{this.searchArticle(key)}} menuList={this.state.menuList} bacList={this.state.bacList}    />
         {/*进度条*/}
         <Progress strokeWidth={4} showInfo={false} style={{position:'relative',top:'-12px',zIndex:99999}} percent={this.state.percent} />
         {/*内容区*/}

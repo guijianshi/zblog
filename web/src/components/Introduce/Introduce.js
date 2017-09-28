@@ -11,7 +11,7 @@ class Introduce extends React.Component{
   render(){
     const colorList=['#f50','#2db7f5','#87d068','#108ee9']
     return (
-      <div>
+      <div className="intro">
         <Card title={<p style={{fontSize:16}}><Icon type="meh-o" /> 关于我</p>} >
           <img style={{height:200,borderRadius:'5px'}} src={this.props.avatar} alt=""/>
           <p style={{marginTop:10}}> {this.props.introduce?this.props.introduce:'一个记性不太好的前端萌新。'}</p>

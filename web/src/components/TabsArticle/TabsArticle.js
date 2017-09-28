@@ -4,7 +4,7 @@
 import React from 'react';
 import {Row, Col,Tabs,Card,Icon,Spin} from 'antd'
 import reqwest from 'reqwest'
-import CardArticleList from  './CardArticleList'
+import CardArticleList from './CardArticleList/CardArticleList'
 const TabPane = Tabs.TabPane;
 class TabsArticle extends React.Component{
   constructor(props) {

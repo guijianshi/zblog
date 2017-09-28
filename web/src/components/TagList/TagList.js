@@ -35,7 +35,7 @@ class tagList extends React.Component{
     const colorList=['#f50','#2db7f5','#87d068','#108ee9','rgb(0, 133, 161)']
     return (
       <div>
-        <Card  title={<p style={{fontSize:16}}><Icon type="tag-o" /> 标签</p>} >
+        <Card  title={<p className="moduleTitle"><Icon type="tag-o" /> 标签</p>} >
 
             {this.state.tagList.map((item,index)=> {
               const randomColor=colorList[parseInt(Math.random()*colorList.length)]

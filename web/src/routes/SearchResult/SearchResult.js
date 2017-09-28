@@ -7,7 +7,7 @@ import {Row, Col,Tabs,Card,Icon} from 'antd'
 import reqwest from 'reqwest'
 const TabPane = Tabs.TabPane;
 import url from '../utils/url'
-import CardArticleList from '../components/CardArticleList'
+import CardArticleList from '../components/CardArticleList/CardArticleList'
 class SearchResult extends React.Component{
   constructor(props) {
     super(props);
